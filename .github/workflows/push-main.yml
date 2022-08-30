@@ -1,0 +1,41 @@
+# Push Main CI is needed as PR main branch might become stale
+name: Push to Main
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  ci-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint Code Base
+        run: ./gradlew verGJF --parallel
+  ci-build:
+    runs-on: ubuntu-latest
+    needs:
+      - ci-linter
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build & Test
+        run: ./gradlew build --parallel --stacktrace
+  ci-sonar:
+    runs-on: ubuntu-latest
+    needs:
+      - ci-build
+    steps:
+      - name: Analyze with SonarCloud
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORG_KEY: ${{ secrets.SONAR_ORG_KEY }}
+        with:
+          args:
+            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ env.SONAR_ORG_KEY }}

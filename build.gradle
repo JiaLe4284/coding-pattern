@@ -1,0 +1,68 @@
+plugins {
+    id 'application'
+    //Format your Java source files with google-java-format
+    id 'com.github.sherter.google-java-format' version '0.9'
+    //Automatic lombok and de-lombok configuration
+    id 'io.freefair.lombok' version '6.5.1'
+    //Integrates the JMH micro-benchmarking framework with Gradle
+    id 'me.champeau.jmh' version '0.6.7'
+    id 'jacoco'
+    id 'org.sonarqube' version '3.4.0.2513'
+}
+group = 'com.coding.pattern'
+version = '0.0.1-SNAPSHOT'
+description = 'Coding Problem Pattern'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    implementation 'com.google.guava:guava:31.1-jre'
+    //Provides the adapter components required for implementers to create a logging implementation
+    implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
+    //Core Log4j Implementation classes
+    implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
+    //Log4j 2 SLF4J binding. It allows applications coded to the SLF4J API to use Log4j2 as the implementation
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.18.0'
+
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'com.coding.pattern.CodingPatternMain'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+googleJavaFormat {
+    toolVersion = '1.7'
+    exclude '**/buildSrc/**'
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+sonarqube {
+    properties {
+        property 'sonar.sourceEncoding', 'UTF-8'
+    }
+}
