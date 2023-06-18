@@ -2,11 +2,11 @@ package com.coding.pattern.slidingwindow;
 
 import com.google.common.base.Preconditions;
 
-public class MaxSumSubArrayOfSizeK {
+public class MaxSubarrayOfSizeK {
 
-  private MaxSumSubArrayOfSizeK() {}
+  private MaxSubarrayOfSizeK() {}
 
-  public static int findMaxSumSubArray0(int k, int[] arr) {
+  public static int findMaxSumSubArray0(int[] arr, int k) {
     Preconditions.checkArgument(k > 0, "Size K must greater than zero.");
     Preconditions.checkNotNull(arr, "Array must not be null.");
 
@@ -23,7 +23,7 @@ public class MaxSumSubArrayOfSizeK {
     return maxSum;
   }
 
-  public static int findMaxSumSubArray1(int k, int[] arr) {
+  public static int findMaxSumSubArray1(int[] arr, int k) {
     Preconditions.checkArgument(k > 0, "Size K must greater than zero.");
     Preconditions.checkNotNull(arr, "Array must not be null.");
 
